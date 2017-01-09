@@ -208,17 +208,46 @@ public class RobotRace extends Base {
         
 
     // Draw hierarchy example.
-        drawHierarchy();
+        //drawHierarchy();
         
         // Draw the axis frame.
         if (gs.showAxes) {
             drawAxisFrame();
         }
         
-        // Draw the (first) robot.
-        gl.glUseProgram(robotShader.getProgramID()); 
-        
+        // Draw the robots.
+        gl.glUseProgram(robotShader.getProgramID());
         robots[0].draw(gl, glu, glut, 0);
+        robots[0].position = new Vector(1, -1, 2);
+        robots[0].headTilt = gs.sliderA;
+        robots[0].leftArmTilt = gs.sliderB;
+        robots[0].rightArmTilt = gs.sliderC;
+        robots[0].leftLegTilt = gs.sliderD;
+        robots[0].rightLegTilt = gs.sliderE;
+        
+        robots[1].draw(gl, glu, glut, 0);
+        robots[1].position = new Vector(1, 1, 2);
+        robots[1].headTilt = Math.sin(gs.tAnim*3);
+        robots[1].leftArmTilt = Math.sin(gs.tAnim*3);
+        robots[1].rightArmTilt = Math.sin(gs.tAnim*3);
+        robots[1].leftLegTilt = Math.sin(gs.tAnim*3);
+        robots[1].rightLegTilt = Math.sin(gs.tAnim*3);
+        
+        robots[2].draw(gl, glu, glut, 0);
+        robots[2].position = new Vector(-1, -1, 2);
+        robots[2].headTilt = gs.sliderA;
+        robots[2].leftArmTilt = gs.sliderB;
+        robots[2].rightArmTilt = gs.sliderC;
+        robots[2].leftLegTilt = gs.sliderD;
+        robots[2].rightLegTilt = gs.sliderE;
+        
+        robots[3].draw(gl, glu, glut, 0);
+        robots[3].position = new Vector(-1, 1, 2);
+        robots[3].headTilt = gs.sliderA;
+        robots[3].leftArmTilt = gs.sliderB;
+        robots[3].rightArmTilt = gs.sliderC;
+        robots[3].leftLegTilt = gs.sliderD;
+        robots[3].rightLegTilt = gs.sliderE;
         
         
         // Draw the race track.
@@ -238,14 +267,34 @@ public class RobotRace extends Base {
      * and origin (yellow).
      */
     public void drawAxisFrame() {
-
+        gl.glColor3d(255, 255, 0);
+        glut.glutSolidSphere(0.1, 12, 12);
+        gl.glColor3d(255, 0, 0);
+        gl.glPushMatrix();
+            gl.glColor3d(0, 0, 255);
+            drawArrow(1);
+            gl.glRotated(-90.0, 1, 0, 0);
+            gl.glColor3d(0, 255, 0);
+            drawArrow(1);
+            gl.glRotated(90.0, 0, 1, 0);
+            gl.glColor3d(255, 0, 0);
+            drawArrow(1);
+        gl.glPopMatrix();
     }
     
     /**
      * Draws a single arrow
      */
-    public void drawArrow() {  
-
+    public void drawArrow(double l) {
+        gl.glPushMatrix();
+            gl.glTranslated(0, 0, l/2);
+            gl.glScaled(l/20, l/20, l);
+        glut.glutSolidCube(1);
+        gl.glPopMatrix();
+        gl.glPushMatrix();
+            gl.glTranslated(0, 0, l);
+            glut.glutSolidCone(l/10, l/6, 12, 1);
+        gl.glPopMatrix();
     }
  
     /**
@@ -263,7 +312,8 @@ public class RobotRace extends Base {
      */
     private void drawHierarchy() {
         gl.glColor3d(gs.sliderC, gs.sliderD, gs.sliderE);
-        gl.glPushMatrix(); 
+        gl.glPushMatrix();
+            gl.glTranslated(1, 0, 0);
             gl.glScaled(2, 1, 1);
             glut.glutSolidCube(1);
             gl.glScaled(0.5, 1, 1);

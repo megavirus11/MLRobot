@@ -11,7 +11,7 @@ public class Lighting {
     private float[] lightPosition = new float[4];
     //The diffuse component of the light source.
     private float[] diffuseLight = {1f, 1f, 1f, 1f};
-     //The specular component of the light source.
+    //The specular component of the light source.
     private float[] specularLight = {1f, 1f, 1f, 1f};
     //The component of the light source.
     private float[] ambientLight = {0.1f, 0.1f, 0.1f, 1f};
@@ -34,16 +34,14 @@ public class Lighting {
     }
 
     private void SetSunPosition(GlobalState gs) {
-        final float azimuth = getAzimuth(gs)-10f;
-        final float inclination = getInclination(gs)-10f;
-        //Calculate the x coordinate of the sun point relative to the center point.
-        final double xSunLocal = Math.cos(azimuth) * Math.cos(inclination) * gs.vDist;
-        //Calculate the y coordinate of the sun point relative to the center point.
-        final double ySunLocal = Math.sin(azimuth) * Math.cos(inclination) * gs.vDist;
-        //Calculate the z coordinate of the sun point relative to the center point.
-        final double zSunLocal = Math.sin(inclination) * gs.vDist;
-        //Create a new vector with the local eye coördinates, IE relative to the center point.
-        final Vector localSun = new Vector(xSunLocal, ySunLocal, zSunLocal);
+        final float azimuth = getAzimuth(gs) - 10f;
+        final float inclination = getInclination(gs) - 10f;
+
+        final Vector localSun = new Vector(
+                Math.cos(azimuth) * Math.cos(inclination) * gs.vDist,
+                Math.sin(azimuth) * Math.cos(inclination) * gs.vDist,
+                Math.sin(inclination) * gs.vDist
+        );
         //Add the relative offet of the center point to the newly calculated coordinates of the sun point.
         final Vector worldSun = localSun.add(gs.cnt);
         this.lightPosition[0] = (float) worldSun.x();

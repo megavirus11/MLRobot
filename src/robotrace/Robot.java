@@ -14,6 +14,9 @@ import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
 */
 class Robot {
     
+        /** The position of the robot. */
+    public Boolean print = false;
+    
     /** The position of the robot. */
     public Vector position = new Vector(0, 0, 0);
     
@@ -61,6 +64,7 @@ class Robot {
         gl.glPopMatrix();
         gl.glPushMatrix();
         gl.glTranslated(this.position.x, this.position.y, this.position.z);
+        gl.glRotated(getRotationAngle(), 0, 0, 1);
         drawHead(gl, glu, glut, tAnim); 
         drawTorso(gl, glu, glut, tAnim);    
         drawLeftArm(gl, glu, glut, tAnim);
@@ -71,10 +75,17 @@ class Robot {
         
         
     }
+    
+    private double getRotationAngle() {
+        double r = 0;
+        Vector v = new Vector(0, 1, 0); //initial direction
+        r = Math.toDegrees(-Math.acos(v.dot(direction))*Math.signum(direction.x));
+        return r;
+    }
         
     private void drawHead(GL2 gl, GLU glu, GLUT glut, float tAnim) {
         gl.glPushMatrix();
-            gl.glTranslated(0,0,0.55);
+            gl.glTranslated(0,0,1.55);
             gl.glRotated(this.headTilt * -15.0, 1, 0, 0);
             gl.glTranslated(0,0,0.15);
             glut.glutSolidCylinder(0.15, 0.30, 12, 12);
@@ -85,7 +96,7 @@ class Robot {
     
     private void drawTorso(GL2 gl, GLU glu, GLUT glut, float tAnim) {
         gl.glPushMatrix();
-            gl.glTranslated(0,0,0.2);
+            gl.glTranslated(0,0,1.2);
             gl.glScaled(0.6, 0.4, 0.8);
             glut.glutSolidCube(1);
         gl.glPopMatrix();
@@ -93,7 +104,7 @@ class Robot {
     
     private void drawLeftArm(GL2 gl, GLU glu, GLUT glut, float tAnim) {
         gl.glPushMatrix();
-            gl.glTranslated(-0.4,0,0.45);
+            gl.glTranslated(-0.4,0,1.45);
             gl.glRotated(this.leftArmTilt * -45.0, 1, 0, 0);
             gl.glTranslated(0,0,-0.4);
             gl.glScaled(0.2, 0.1, 0.8);
@@ -103,7 +114,7 @@ class Robot {
     
     private void drawRightArm(GL2 gl, GLU glu, GLUT glut, float tAnim) {
         gl.glPushMatrix();
-            gl.glTranslated(0.4,0,0.45);
+            gl.glTranslated(0.4,0,1.45);
             gl.glRotated(this.rightArmTilt * 45.0, 1, 0, 0);
             gl.glTranslated(0,0,-0.4);
             gl.glScaled(0.2, 0.1, 0.8);
@@ -113,7 +124,7 @@ class Robot {
     
     private void drawLeftLeg(GL2 gl, GLU glu, GLUT glut, float tAnim) {
         gl.glPushMatrix();
-            gl.glTranslated(-0.15,0,-0.2);
+            gl.glTranslated(-0.15,0,0.8);
             gl.glRotated(this.leftLegTilt * 45.0, 1, 0, 0);
             gl.glTranslated(0,0,-0.4);
             gl.glScaled(0.2, 0.1, 0.8);
@@ -123,7 +134,7 @@ class Robot {
     
     private void drawRightLeg(GL2 gl, GLU glu, GLUT glut, float tAnim) {
         gl.glPushMatrix();
-            gl.glTranslated(0.15,0,-0.2);
+            gl.glTranslated(0.15,0,0.8);
             gl.glRotated(this.rightLegTilt * -45.0, 1, 0, 0);
             gl.glTranslated(0,0,-0.4);
             gl.glScaled(0.2, 0.1, 0.8);

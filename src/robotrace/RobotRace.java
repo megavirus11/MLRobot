@@ -115,7 +115,38 @@ public class RobotRace extends Base {
         float g = 3.5f;
         raceTracks[1] = new BezierTrack(
 
-            new Vector[] {}
+            new Vector[] {
+//                new Vector(10,0,1),
+//                new Vector(10,10,1),
+//                new Vector(-10,10,1),
+//                new Vector(-10,0,1),
+//                new Vector(-10,-10,1),
+//                new Vector(10,-10,1)
+                new Vector(4,0,1),
+                    new Vector(4,5,1),
+                    new Vector(10,5,1),
+                new Vector(10,10,1),
+                    new Vector(10,15,1),
+                    new Vector(5,15,1),
+                new Vector(0,15,1),
+                    new Vector(-5,15,1),
+                    new Vector(-10,15,1),
+                new Vector(-10,10,1),
+                    new Vector(-10,5,1),
+                    new Vector(-4,5,1),
+                new Vector(-4,0,1),
+                    new Vector(-4,-5,1),
+                    new Vector(-10,-5,1),
+                new Vector(-10,-10,1),
+                    new Vector(-10,-15,1),
+                    new Vector(-5,-15,1),
+                new Vector(0,-15,1),
+                    new Vector(5,-15,1),
+                    new Vector(10,-15,1),
+                new Vector(10,-10,1),
+                    new Vector(10,-5,1),
+                    new Vector(4,-5,1)
+            }
 
         );
 
@@ -213,8 +244,8 @@ public class RobotRace extends Base {
         // Draw the robots.
         //gl.glUseProgram(robotShader.getProgramID());
         robots[0].draw(gl, glu, glut, 0);
-        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, gs.tAnim/10);
-        robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, gs.tAnim/10);
+        //robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, gs.tAnim/10);
+        //robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, gs.tAnim/10);
         robots[0].headTilt = gs.sliderA;
         robots[0].leftArmTilt = 300;
         robots[0].rightArmTilt = gs.sliderC;
@@ -223,8 +254,8 @@ public class RobotRace extends Base {
         robots[0].print = true;
 
         robots[1].draw(gl, glu, glut, 0);
-        robots[1].position = raceTracks[gs.trackNr].getLanePoint(1, gs.tAnim/12);
-        robots[1].direction = raceTracks[gs.trackNr].getLaneTangent(1, gs.tAnim/12);
+        //robots[1].position = raceTracks[gs.trackNr].getLanePoint(1, gs.tAnim/12);
+        //robots[1].direction = raceTracks[gs.trackNr].getLaneTangent(1, gs.tAnim/12);
         robots[1].headTilt = Math.sin(gs.tAnim*3);
         robots[1].leftArmTilt = Math.sin(gs.tAnim*3);
         robots[1].rightArmTilt = Math.sin(gs.tAnim*3);
@@ -232,8 +263,8 @@ public class RobotRace extends Base {
         robots[1].rightLegTilt = Math.sin(gs.tAnim*3);
 
         robots[2].draw(gl, glu, glut, 0);
-        robots[2].position = raceTracks[gs.trackNr].getLanePoint(2, gs.tAnim/14);
-        robots[2].direction = raceTracks[gs.trackNr].getLaneTangent(2, gs.tAnim/14);
+        //robots[2].position = raceTracks[gs.trackNr].getLanePoint(2, gs.tAnim/14);
+        //robots[2].direction = raceTracks[gs.trackNr].getLaneTangent(2, gs.tAnim/14);
         robots[2].headTilt = gs.sliderA;
         robots[2].leftArmTilt = gs.sliderB;
         robots[2].rightArmTilt = gs.sliderC;
@@ -241,8 +272,8 @@ public class RobotRace extends Base {
         robots[2].rightLegTilt = gs.sliderE;
 
         robots[3].draw(gl, glu, glut, 0);
-        robots[3].position = raceTracks[gs.trackNr].getLanePoint(3, gs.tAnim/16);
-        robots[3].direction = raceTracks[gs.trackNr].getLaneTangent(3, gs.tAnim/16);
+        //robots[3].position = raceTracks[gs.trackNr].getLanePoint(3, gs.tAnim/16);
+        //robots[3].direction = raceTracks[gs.trackNr].getLaneTangent(3, gs.tAnim/16);
         robots[3].headTilt = gs.sliderA;
         robots[3].leftArmTilt = gs.sliderB;
         robots[3].rightArmTilt = gs.sliderC;

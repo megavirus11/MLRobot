@@ -18,7 +18,7 @@ abstract class RaceTrack {
     protected final static float laneWidth = 1.22f;
     
     /** The number of segments of the track. */
-    protected final static int segments = 30;
+    protected final static int segments = 120;
     
     /** Array of vectors defining the center of the track. */
     protected Vector[] trackLine = new Vector[segments+1];
@@ -38,14 +38,13 @@ abstract class RaceTrack {
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         double t = 0; //point on track in [0,1]
         /** Draw trackline. */
-        /* 
         gl.glBegin(GL_LINE_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
-            gl.glVertex3d(getPoint(t).x, getPoint(t).y, getPoint(t).z);
+            gl.glVertex3d(getPoint(t).x, getPoint(t).y, 2);
         }
         gl.glEnd();
-        */
+        
         
         Vector v = new Vector(0,0,0); //dirty vector
         

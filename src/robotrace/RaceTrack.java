@@ -3,7 +3,10 @@ package robotrace;
 import com.jogamp.opengl.util.gl2.GLUT;
 import static javax.media.opengl.GL.GL_LINES;
 import static javax.media.opengl.GL.GL_LINE_STRIP;
+import static javax.media.opengl.GL.GL_REPEAT;
 import static javax.media.opengl.GL.GL_TEXTURE_2D;
+import static javax.media.opengl.GL.GL_TEXTURE_WRAP_S;
+import static javax.media.opengl.GL.GL_TEXTURE_WRAP_T;
 import static javax.media.opengl.GL.GL_TRIANGLE_STRIP;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
@@ -39,88 +42,81 @@ abstract class RaceTrack {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         double t = 0; //point on track in [0,1]
-        /** Draw trackline. */
+        /** Draw trackline. 
         gl.glBegin(GL_LINE_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             gl.glVertex3d(getPoint(t).x, getPoint(t).y, 2);
         }
         gl.glEnd();
-        
+        */
         
         Vector v = new Vector(0,0,0); //dirty vector
         
         /** Draw road. */
         gl.glColor3f(1f, 1f, 1f);
         Textures.track.bind(gl);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             //outer
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
-            gl.glTexCoord2d(1,(t%(1/segments))*segments);
+            gl.glTexCoord2d(1,(segments/5)*t);
             gl.glVertex3d(v.x, v.y, v.z);
             //inner
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
-            gl.glTexCoord2d(0,t);
+            gl.glTexCoord2d(0,(segments/5)*t);
             gl.glVertex3d(v.x, v.y, v.z);
         }
         gl.glEnd();
         
-        //gl.glEnable( GL_TEXTURE_2D );
-        gl.glColor3f(1f, 1f, 1f);
-        Textures.track.bind(gl);
-        gl.glBegin(GL_QUADS);
-            gl.glNormal3d(1, 0, 0);
-            gl.glTexCoord2d(1,1);
-            gl.glVertex3d(1.1, 1, 1);
-            gl.glTexCoord2d(1,0);
-            gl.glVertex3d(1.1, 1, -1);
-            gl.glTexCoord2d(0,0);
-            gl.glVertex3d(1.1, -1, -1);
-            gl.glTexCoord2d(0,1);
-            gl.glVertex3d(1.1, -1, 1);
-        gl.glEnd();
-        
         /** Draw inner side of track. */
-        gl.glColor3f(0.7f, 0.7f, 0.7f);
+        Textures.brick.bind(gl);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             //top
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
+            gl.glTexCoord2d((segments/5)*t,1);
             gl.glVertex3d(v.x, v.y, v.z);
             //bottom
             v = getPoint(t).add(Vector.Z.scale(-2)).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
+            gl.glTexCoord2d((segments/5)*t,0);
             gl.glVertex3d(v.x, v.y, v.z);
         }
         gl.glEnd();
         
         /** Draw outer side of track. */
-        gl.glColor3f(0.7f, 0.7f, 0.7f);
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             //top
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
+            gl.glTexCoord2d((segments/5)*t,1);
             gl.glVertex3d(v.x, v.y, v.z);
             //bottom
             v = getPoint(t).add(Vector.Z.scale(-2)).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
+            gl.glTexCoord2d((segments/5)*t,0);
             gl.glVertex3d(v.x, v.y, v.z);
         }
         gl.glEnd();
         
         
         /** Draw road bottom. */
-        gl.glColor3f(0.9f, 0.9f, 0.9f);
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             //outer
             v = getPoint(t).add(Vector.Z.scale(-2)).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
+            gl.glTexCoord2d((segments/5)*t,1);
             gl.glVertex3d(v.x, v.y, v.z);
             //inner
             v = getPoint(t).add(Vector.Z.scale(-2)).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
+            gl.glTexCoord2d((segments/5)*t,0);
             gl.glVertex3d(v.x, v.y, v.z);
         }
         gl.glEnd();

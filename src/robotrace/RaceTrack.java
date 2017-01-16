@@ -51,24 +51,25 @@ abstract class RaceTrack {
         Vector v = new Vector(0,0,0); //dirty vector
         
         /** Draw road. */
-        gl.glColor3f(0.2f, 0.2f, 0.2f);
+        gl.glColor3f(1f, 1f, 1f);
+        Textures.track.bind(gl);
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             //outer
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
-            gl.glTexCoord2d(t,1);
+            gl.glTexCoord2d(1,(t%(1/segments))*segments);
             gl.glVertex3d(v.x, v.y, v.z);
             //inner
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
-            gl.glTexCoord2d(t,0);
+            gl.glTexCoord2d(0,t);
             gl.glVertex3d(v.x, v.y, v.z);
         }
         gl.glEnd();
         
         //gl.glEnable( GL_TEXTURE_2D );
+        gl.glColor3f(1f, 1f, 1f);
         Textures.track.bind(gl);
-        ShaderPrograms.trackShader.setUniform(gl, "useTexture", 1);
         gl.glBegin(GL_QUADS);
             gl.glNormal3d(1, 0, 0);
             gl.glTexCoord2d(1,1);
@@ -80,7 +81,6 @@ abstract class RaceTrack {
             gl.glTexCoord2d(0,1);
             gl.glVertex3d(1.1, -1, 1);
         gl.glEnd();
-        ShaderPrograms.trackShader.setUniform(gl, "useTexture", 0);
         
         /** Draw inner side of track. */
         gl.glColor3f(0.7f, 0.7f, 0.7f);

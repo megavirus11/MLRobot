@@ -3,11 +3,13 @@ package robotrace;
 import com.jogamp.opengl.util.gl2.GLUT;
 import static javax.media.opengl.GL.GL_LINES;
 import static javax.media.opengl.GL.GL_LINE_STRIP;
+import static javax.media.opengl.GL.GL_TEXTURE_2D;
 import static javax.media.opengl.GL.GL_TRIANGLE_STRIP;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import static javax.media.opengl.GL2.*;
 import static robotrace.General.*;
+import static robotrace.Textures.*;
 
 /**
  * Implementation of a race track that is made from Bezier segments.
@@ -55,12 +57,30 @@ abstract class RaceTrack {
             t=((double) i)/segments;
             //outer
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
+            gl.glTexCoord2d(t,1);
             gl.glVertex3d(v.x, v.y, v.z);
             //inner
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
+            gl.glTexCoord2d(t,0);
             gl.glVertex3d(v.x, v.y, v.z);
         }
         gl.glEnd();
+        
+        //gl.glEnable( GL_TEXTURE_2D );
+        Textures.track.bind(gl);
+        ShaderPrograms.trackShader.setUniform(gl, "useTexture", 1);
+        gl.glBegin(GL_QUADS);
+            gl.glNormal3d(1, 0, 0);
+            gl.glTexCoord2d(1,1);
+            gl.glVertex3d(1.1, 1, 1);
+            gl.glTexCoord2d(1,0);
+            gl.glVertex3d(1.1, 1, -1);
+            gl.glTexCoord2d(0,0);
+            gl.glVertex3d(1.1, -1, -1);
+            gl.glTexCoord2d(0,1);
+            gl.glVertex3d(1.1, -1, 1);
+        gl.glEnd();
+        ShaderPrograms.trackShader.setUniform(gl, "useTexture", 0);
         
         /** Draw inner side of track. */
         gl.glColor3f(0.7f, 0.7f, 0.7f);

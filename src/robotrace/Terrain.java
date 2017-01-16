@@ -191,11 +191,7 @@ class Terrain {
 // fill arrays
         for (int i = 0; i < terrainGridLength; i++)
             for (int j = 0; j < terrainGridWidth; j++) {
-                float kappa = height.getRGB(j, i);
-                int kappa1 = (int) kappa & 255;
-                double kappa2 = (float) kappa1 / 255.0;
                 terrainHeights[i * terrainGridWidth + j] = (float) ((height.getRGB(j, i) & 255) / 255.0);
-                int kappa3 = (color.getRGB((int) (color.getWidth() * ((height.getRGB(j, i) & 255) / 255.0)), 0));
                 terrainColors[i * terrainGridWidth + j] = color.getRGB((int) (color.getWidth() * ((height.getRGB(j, i) & 255) / 255.0)), 0);
             }
 // if we want normals then compute them
@@ -258,12 +254,7 @@ class Terrain {
             gl.glBegin(GL.GL_TRIANGLE_STRIP);
             for (j = 0; j < terrainGridWidth; j++) {
 
-                /*if (terrainColors != null)
-                    glColor3f(terrainColors[3 * ((i + 1) * terrainGridWidth + j)],
-                            terrainColors[3 * ((i + 1) * terrainGridWidth + j) + 1],
-                            terrainColors[3 * ((i + 1) * terrainGridWidth + j) + 2]);*/
                 color = new Color(terrainColors[(i + 1) * terrainGridWidth + (j)]);
-                //lighting.setColor(gl, color.getRed()/255, color.getGreen()/255, color.getBlue()/255, 1f);
                 gl.glColor3f(color.getRed()/255.0f, color.getGreen()/255.0f, color.getBlue()/255.0f);
                 if (terrainNormals != null) {
                     gl.glNormal3f(terrainNormals[3 * ((i + 1) * terrainGridWidth + j)],
@@ -274,14 +265,8 @@ class Terrain {
                         startW + j + xOffset,
                         startL - (i + 1) + zOffset,
                         terrainHeights[(i + 1) * terrainGridWidth + (j)] + yOffset);
-                
 
-                /*if (terrainColors != null)
-                    glColor3f(terrainColors[3 * (i * terrainGridWidth + j)],
-                            terrainColors[3 * (i * terrainGridWidth + j) + 1],
-                            terrainColors[3 * (i * terrainGridWidth + j) + 2]);*/
                 color = new Color(terrainColors[(i + 1) * terrainGridWidth + (j)]);
-                //lighting.setColor(gl, color.getRed()/255, color.getGreen()/255, color.getBlue()/255, 1f);
                 gl.glColor3f(color.getRed()/255.0f, color.getGreen()/255.0f, color.getBlue()/255.0f);
                 if (terrainNormals != null) {
                     gl.glNormal3f(terrainNormals[3 * (i * terrainGridWidth + j)],
@@ -297,31 +282,4 @@ class Terrain {
         }
         return (terrainDL);
     }
-
-    float terrainGetHeight(int x, int z) {
-
-        int xt, zt;
-
-        if (terrainHeights == null)
-            return (0.0f);
-
-        xt = x + terrainGridWidth / 2;
-        zt = terrainGridWidth - (z + terrainGridLength / 2);
-
-        if ((xt > terrainGridWidth) || (zt > terrainGridLength) || (xt < 0) || (zt < 0))
-            return (0.0f);
-
-        return (terrainHeights[zt * terrainGridWidth + xt]);
-    }
-
-    public void reportError(GL gl, GLU glu, String prefix) {
-        // Report OpenGL errors.
-        int errorCode = gl.glGetError();
-        while (errorCode != GL.GL_NO_ERROR) {
-            System.err.format("%s:%d: %s\n", prefix, errorCode, glu.gluErrorString(errorCode));
-            errorCode = gl.glGetError();
-        }
-    }
-
-
 }

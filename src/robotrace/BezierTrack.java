@@ -19,14 +19,6 @@ public class BezierTrack extends RaceTrack {
     protected Vector getPoint(double t) {
         int k = 3*(int)Math.floor((t*(double)(n))/3); //first point of curve
         double tLocal = (t%(double)(3.0/(double)n))/(3.0/(double)n); //local t on Bezier curve
-//        System.out.println("t: "+t);
-//        System.out.println("tLocal: "+tLocal);
-//        System.out.println("k: "+k);
-//        System.out.println("n: "+n);
-//        System.out.println("controlPoints[k]: "+controlPoints[(k)%n]);
-//        System.out.println("controlPoints[k+1]: "+controlPoints[(k+1)%n]);
-//        System.out.println("controlPoints[k+2]: "+controlPoints[(k+2)%n]);
-//        System.out.println("controlPoints[k+3]: "+controlPoints[(k+3)%n]);
         return CalculateBezierPoint(
                 tLocal, 
                 controlPoints[(k)%n], 
@@ -37,8 +29,14 @@ public class BezierTrack extends RaceTrack {
 
     @Override
     protected Vector getTangent(double t) {
-
-        return Vector.X;
+        int k = 3*(int)Math.floor((t*(double)(n))/3); //first point of curve
+        double tLocal = (t%(double)(3.0/(double)n))/(3.0/(double)n); //local t on Bezier curve
+        return CalculateBezierTangent(
+                tLocal, 
+                controlPoints[(k)%n], 
+                controlPoints[(k+1)%n], 
+                controlPoints[(k+2)%n], 
+                controlPoints[(k+3)%n]).normalized();
 
     }
     
@@ -57,5 +55,25 @@ public class BezierTrack extends RaceTrack {
         return p;
     }
     
+    Vector CalculateBezierTangent(double t, Vector p0, Vector p1, Vector p2, Vector p3) {
+        double u = 1-t;
+        double tt = t*t;
+        double uu = u*u;
+        double uuu = uu * u;
+        double ttt = tt * t;
+
+        Vector p = p0.scale(-3*uu); //first term
+        p = p.add(p1.scale((3 * uu) - (6*u* t))); //second term
+        p = p.add(p2.scale((6 * u * t)-3*tt)); //third term
+        p = p.add(p3.scale(3*tt)); //fourth term
+        
+        
+//        dC(t)/dt = T(t) =
+//        -3*P0*(1 - t)^2 + 
+//        P1*(3*(1 - t)^2 - 6*(1 - t)*t) + 
+//        P2*(6*(1 - t)*t - 3*t^2) +
+//        3*P3*t^2
+        return p;
+    }
 
 }

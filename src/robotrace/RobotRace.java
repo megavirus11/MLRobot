@@ -245,10 +245,10 @@ public class RobotRace extends Base {
             drawAxisFrame();
         }
         double t = updateTimeTicker(gs.tAnim);
+        updateSpeedTracker(gs.tAnim);
         for (int i = 0; i<4; i++) {
             robots[i].draw(gl, glu, glut, 0);
             robots[i].timeTracker += t*speedTracker[i];
-            System.out.println("speedTracker["+i+"]="+speedTracker[i]);
             
             robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, robots[i].timeTracker/10.5);
             robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, robots[i].timeTracker/10.5);

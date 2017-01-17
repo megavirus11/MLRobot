@@ -69,6 +69,10 @@ public class RobotRace extends Base {
 
     /** Instance of the terrain. */
     private final Terrain terrain;
+    
+    private double timeTicker = 0;
+    private double speedTimeTicker = 0;
+    private double speedTracker[] = {(double)17/20, (double)18/20, (double)19/20, (double)20/20};
 
     /**
      * Constructs this robot race by initializing robots,
@@ -208,7 +212,7 @@ public class RobotRace extends Base {
 
         // Update the view according to the camera mode and robot of interest.
         // For camera modes 1 to 4, determine which robot to focus on.
-        camera.update(gs, robots[0]);
+        camera.update(gs, robots[3]);
         glu.gluLookAt(camera.eye.x(),    camera.eye.y(),    camera.eye.z(),
                       camera.center.x(), camera.center.y(), camera.center.z(),
                       camera.up.x(),     camera.up.y(),     camera.up.z());
@@ -240,47 +244,22 @@ public class RobotRace extends Base {
         if (gs.showAxes) {
             drawAxisFrame();
         }
-
-        // Draw the robots.
-        //gl.glUseProgram(robotShader.getProgramID());
-        robots[0].draw(gl, glu, glut, 0);
-        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, gs.tAnim/10);
-        robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, gs.tAnim/10);
-        robots[0].headTilt = gs.sliderA;
-        robots[0].leftArmTilt = 300;
-        robots[0].rightArmTilt = gs.sliderC;
-        robots[0].leftLegTilt = gs.sliderD;
-        robots[0].rightLegTilt = gs.sliderE;
-        robots[0].print = true;
-
-        robots[1].draw(gl, glu, glut, 0);
-        robots[1].position = raceTracks[gs.trackNr].getLanePoint(1, gs.tAnim/12);
-        robots[1].direction = raceTracks[gs.trackNr].getLaneTangent(1, gs.tAnim/12);
-        robots[1].headTilt = Math.sin(gs.tAnim*3);
-        robots[1].leftArmTilt = Math.sin(gs.tAnim*3);
-        robots[1].rightArmTilt = Math.sin(gs.tAnim*3);
-        robots[1].leftLegTilt = Math.sin(gs.tAnim*3);
-        robots[1].rightLegTilt = Math.sin(gs.tAnim*3);
-
-        robots[2].draw(gl, glu, glut, 0);
-        robots[2].position = raceTracks[gs.trackNr].getLanePoint(2, gs.tAnim/14);
-        robots[2].direction = raceTracks[gs.trackNr].getLaneTangent(2, gs.tAnim/14);
-        robots[2].headTilt = gs.sliderA;
-        robots[2].leftArmTilt = gs.sliderB;
-        robots[2].rightArmTilt = gs.sliderC;
-        robots[2].leftLegTilt = gs.sliderD;
-        robots[2].rightLegTilt = gs.sliderE;
-
-        robots[3].draw(gl, glu, glut, 0);
-        robots[3].position = raceTracks[gs.trackNr].getLanePoint(3, gs.tAnim/16);
-        robots[3].direction = raceTracks[gs.trackNr].getLaneTangent(3, gs.tAnim/16);
-        robots[3].headTilt = gs.sliderA;
-        robots[3].leftArmTilt = gs.sliderB;
-        robots[3].rightArmTilt = gs.sliderC;
-        robots[3].leftLegTilt = gs.sliderD;
-        robots[3].rightLegTilt = gs.sliderE;
-
-
+        double t = updateTimeTicker(gs.tAnim);
+        for (int i = 0; i<4; i++) {
+            robots[i].draw(gl, glu, glut, 0);
+            robots[i].timeTracker += t*speedTracker[i];
+            System.out.println("speedTracker["+i+"]="+speedTracker[i]);
+            
+            robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, robots[i].timeTracker/10.5);
+            robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, robots[i].timeTracker/10.5);
+            robots[i].viewDirection = raceTracks[gs.trackNr].getLanePoint(i, (robots[i].timeTracker+1)/10.5);
+            robots[i].headTilt = Math.sin(robots[i].timeTracker*7.5);
+            robots[i].leftArmTilt = Math.sin(robots[i].timeTracker*7.5);
+            robots[i].rightArmTilt = Math.sin(robots[i].timeTracker*7.5);
+            robots[i].leftLegTilt = Math.sin(robots[i].timeTracker*7.5);
+            robots[i].rightLegTilt = Math.sin(robots[i].timeTracker*7.5);
+        }
+        
         // Draw the race track.
         gl.glUseProgram(trackShader.getProgramID());
         raceTracks[gs.trackNr].draw(gl, glu, glut);
@@ -291,6 +270,33 @@ public class RobotRace extends Base {
         reportError("terrain:");
 
 
+    }
+    
+    private double updateTimeTicker(double t) {
+        double fps = 60;
+        t*=fps;
+        double r = 0;
+        if (Math.floor(t) != timeTicker){
+            timeTicker = Math.floor(t);
+            r = (double)1/fps;
+            
+        }
+        
+        return r;
+    }
+    
+    private void updateSpeedTracker(double t) {
+        if (Math.floor(t) != speedTimeTicker){
+            speedTimeTicker = Math.floor(t);
+            for (int i = 0; i < 4;i++){
+                speedTracker[i] += (Math.random()/10)-0.05;
+                if (speedTracker[i] > 1.2) {
+                    speedTracker[i] = 1.1;
+                }else if (speedTracker[i] < 0.8) {
+                    speedTracker[i] = 0.8;
+                }
+            }
+        }
     }
 
     /**

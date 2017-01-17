@@ -22,6 +22,11 @@ class Robot {
     
     /** The direction in which the robot is running. */
     public Vector direction = new Vector(1, 0, 0);
+    
+    /** The direction in which the robot is looking. */
+    public Vector viewDirection = new Vector(0, 0, 0);
+    
+    public float timeTracker;
 
     /** The material from which this robot is built. */
     private final Material material;

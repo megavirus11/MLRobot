@@ -52,12 +52,15 @@ abstract class RaceTrack {
         */
         
         Vector v = new Vector(0,0,0); //dirty vector
+        Vector n = new Vector(0,0,0); //dirty normal vector
         
         /** Draw road. */
         gl.glColor3f(1f, 1f, 1f);
         Textures.track.bind(gl);
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        n = Vector.Z; // <------------------------NORMAL
+        gl.glNormal3d(n.x, n.y,n.z); // <------------------------NORMAL
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
@@ -79,6 +82,8 @@ abstract class RaceTrack {
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
+            n = getUnitNormalPointingOut(t).scale(-1); // <------------------------NORMAL
+            gl.glNormal3d(n.x, n.y,n.z); // <------------------------NORMAL
             //top
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*-2));
             gl.glTexCoord2d((segments/5)*t,1);
@@ -94,6 +99,8 @@ abstract class RaceTrack {
         gl.glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
+            n = getUnitNormalPointingOut(t); // <------------------------NORMAL
+            gl.glNormal3d(n.x, n.y,n.z); // <------------------------NORMAL
             //top
             v = getPoint(t).add(getUnitNormalPointingOut(t).scale(laneWidth*2));
             gl.glTexCoord2d((segments/5)*t,1);
@@ -108,6 +115,8 @@ abstract class RaceTrack {
         
         /** Draw road bottom. */
         gl.glBegin(GL_QUAD_STRIP);
+        n = Vector.Z.scale(-1); // <------------------------NORMAL
+        gl.glNormal3d(n.x, n.y,n.z); // <------------------------NORMAL
         for (int i = 0; i <= segments; i++) {
             t=((double) i)/segments;
             //outer

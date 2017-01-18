@@ -71,8 +71,7 @@ public class RobotRace extends Base {
     private final Terrain terrain;
     
     private double timeTicker = 0;
-    private double speedTimeTicker = 0;
-    private double speedTracker[] = {(double)17/20, (double)18/20, (double)19/20, (double)20/20};
+    private int accellTicker = 0;
 
     /**
      * Constructs this robot race by initializing robots,
@@ -212,7 +211,7 @@ public class RobotRace extends Base {
 
         // Update the view according to the camera mode and robot of interest.
         // For camera modes 1 to 4, determine which robot to focus on.
-        camera.update(gs, robots[3]);
+        camera.update(gs, getRobotAtBackOfRace());
         glu.gluLookAt(camera.eye.x(),    camera.eye.y(),    camera.eye.z(),
                       camera.center.x(), camera.center.y(), camera.center.z(),
                       camera.up.x(),     camera.up.y(),     camera.up.z());
@@ -244,12 +243,10 @@ public class RobotRace extends Base {
         if (gs.showAxes) {
             drawAxisFrame();
         }
-        double t = updateTimeTicker(gs.tAnim);
-        updateSpeedTracker(gs.tAnim);
+        double t = animator(30);
         for (int i = 0; i<4; i++) {
             robots[i].draw(gl, glu, glut, 0);
-            robots[i].timeTracker += t*speedTracker[i];
-            
+            robots[i].timeTracker += t*robots[i].accellTracker;
             robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, robots[i].timeTracker/10.5);
             robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, robots[i].timeTracker/10.5);
             robots[i].viewDirection = raceTracks[gs.trackNr].getLanePoint(i, (robots[i].timeTracker+1)/10.5);
@@ -272,31 +269,57 @@ public class RobotRace extends Base {
 
     }
     
-    private double updateTimeTicker(double t) {
-        double fps = 60;
+    private double animator(double fps) {
+        double t = gs.tAnim;
         t*=fps;
         double r = 0;
+        double maxSpeedDiff = 0.4;
+        double accel = maxSpeedDiff/(fps/2);
         if (Math.floor(t) != timeTicker){
             timeTicker = Math.floor(t);
             r = (double)1/fps;
             
+            // update current speed of robot every 1/fps sec
+            for (int i = 0; i < 4;i++){
+                if (robots[i].accellTracker < robots[i].accellTarget) {
+                    robots[i].accellTracker += accel;
+                    if (robots[i].accellTracker >= robots[i].accellTarget) {
+                        robots[i].accellTracker = robots[i].accellTarget;
+                    }
+                } else if (robots[i].accellTracker > robots[i].accellTarget) {
+                    robots[i].accellTracker -= accel;
+                    if (robots[i].accellTracker <= robots[i].accellTarget) {
+                        robots[i].accellTracker = robots[i].accellTarget;
+                    }
+                }
+            }
+            
+            //init robot speeds at start
+            for (int i = 0; i < 4;i++){
+                if (robots[i].accellTarget == 0) {
+                    robots[i].accellTarget = (float)(1-(maxSpeedDiff/2) +(Math.random()*maxSpeedDiff));
+                }
+            }
+            // update target speed of robot every 0.5 sec
+            accellTicker++;
+            if (accellTicker>=(int)fps/2) {
+                accellTicker = 0;
+                int i = (int) Math.floor(Math.random()*4);
+                robots[i].accellTarget = (float)(1-(maxSpeedDiff/2) +(Math.random()*maxSpeedDiff));
+            }
+            
         }
-        
         return r;
     }
     
-    private void updateSpeedTracker(double t) {
-        if (Math.floor(t) != speedTimeTicker){
-            speedTimeTicker = Math.floor(t);
-            for (int i = 0; i < 4;i++){
-                speedTracker[i] += (Math.random()/10)-0.05;
-                if (speedTracker[i] > 1.2) {
-                    speedTracker[i] = 1.1;
-                }else if (speedTracker[i] < 0.8) {
-                    speedTracker[i] = 0.8;
-                }
+    private Robot getRobotAtBackOfRace() {
+        Robot r = robots[0];
+        for (int i = 1; i < 4;i++){
+            if (r.timeTracker > robots[i].timeTracker) {
+                r = robots[i];
             }
         }
+        return r;
     }
 
     /**

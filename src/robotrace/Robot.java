@@ -26,7 +26,11 @@ class Robot {
     /** The direction in which the robot is looking. */
     public Vector viewDirection = new Vector(0, 0, 0);
     
-    public float timeTracker;
+    public float timeTracker; //total animation time of robot
+    
+    public float accellTracker; //current speed between 0.8 and 1.2
+        
+    public float accellTarget; //target speed between 0.8 and 1.2
 
     /** The material from which this robot is built. */
     private final Material material;

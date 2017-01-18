@@ -245,6 +245,11 @@ public class RobotRace extends Base {
         gl.glUseProgram(terrainShader.getProgramID());
         terrain.draw(gl, glu, glut, lighting);
         reportError("terrain:");
+        // REMOVE SUN TEst
+//        lighting.lightPosition[0] = (float)gs.sliderA;
+//        lighting.lightPosition[1] = (float) gs.sliderB;
+//        lighting.lightPosition[2] = (float) gs.sliderC;
+//        lighting.lightPosition[3] = 0; //infinite
 
 
     }

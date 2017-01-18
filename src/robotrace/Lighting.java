@@ -8,7 +8,7 @@ import static robotrace.General.*;
 
 
 public class Lighting {
-    private float[] lightPosition = new float[4];
+    public float[] lightPosition = new float[4];
     //The diffuse component of the light source.
     private float[] diffuseLight = {1f, 1f, 1f, 1f};
     //The specular component of the light source.
@@ -34,8 +34,8 @@ public class Lighting {
     }
 
     private void SetSunPosition(GlobalState gs) {
-        final float azimuth = getAzimuth(gs) - 10f;
-        final float inclination = getInclination(gs) - 10f;
+        final float azimuth = getAzimuth(gs) - 13f;
+        final float inclination = getInclination(gs) -10f;
 
         final Vector localSun = new Vector(
                 Math.cos(azimuth) * Math.cos(inclination) * gs.vDist,

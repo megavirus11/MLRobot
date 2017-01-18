@@ -87,8 +87,8 @@ class Camera {
         );*/
 
         this.eye = new Vector(
-                Math.cos(getAzimuth(gs)) * Math.cos(getInclination(gs)) * gs.vDist,
-                Math.sin(getAzimuth(gs)) * Math.cos(getInclination(gs)) * gs.vDist,
+                Math.cos(-getAzimuth(gs)/2) * Math.cos(getInclination(gs)) * gs.vDist,
+                Math.sin(-getAzimuth(gs)/2) * Math.cos(getInclination(gs)) * gs.vDist,
                 Math.sin(getInclination(gs)) * gs.vDist
         ).add(gs.cnt);
         //Get the center point from the global state.

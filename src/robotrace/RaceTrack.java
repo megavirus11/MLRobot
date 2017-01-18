@@ -20,7 +20,7 @@ import static robotrace.Textures.*;
 abstract class RaceTrack {
     
     /** The width of one lane. The total width of the track is 4 * laneWidth. */
-    protected final static float laneWidth = 1.22f;
+    protected final static float laneWidth = 1.22f; 
     
     /** The number of segments of the track. */
     protected final static int segments = 120;
@@ -40,7 +40,7 @@ abstract class RaceTrack {
     /**
      * Draws this track, based on the control points.
      */
-    public void draw(GL2 gl, GLU glu, GLUT glut) {
+    public void draw(GL2 gl, GLU glu, GLUT glut, Lighting lighting) {
         double t = 0; //point on track in [0,1]
         /** Draw trackline. 
         gl.glBegin(GL_LINE_STRIP);
@@ -55,7 +55,8 @@ abstract class RaceTrack {
         Vector n = new Vector(0,0,0); //dirty normal vector
         
         /** Draw road. */
-        gl.glColor3f(1f, 1f, 1f);
+        lighting.setMaterial(gl, Material.NONE);
+        lighting.setColor(gl, 1f, 1f, 1f, 1f);
         Textures.track.bind(gl);
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -76,6 +77,7 @@ abstract class RaceTrack {
         gl.glEnd();
         
         /** Draw inner side of track. */
+        //lighting.setMaterial(gl, Material.BOULDER);
         Textures.brick.bind(gl);
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

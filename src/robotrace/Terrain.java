@@ -31,15 +31,18 @@ class Terrain {
      * Draws the terrain.
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, Lighting lighting) {
+        lighting.setMaterial(gl, Material.DIRT);
+        lighting.setColor(gl, 1f, 1f, 1f, 1f);
         terrainLoadFromImage("textures/3dtech0.jpg", 1);
         terrainScale(0, 40);
-        terrainCreateDL(gl, glu, glut, 0, -50f, 0, lighting);
+        terrainCreateDL(gl, glu, glut, 0, -40f, 0, lighting);
     }
 
     public static int terrainGridWidth, terrainGridLength;
     public static float[] terrainHeights;
     public static int[] terrainColors;
     public static float[] terrainNormals;
+    public static float waterLevel = 0.2f;
 
 
     public float[] terrainCrossProduct(int x1, int z1, int x2, int z2, int x3, int z3) {
@@ -185,9 +188,9 @@ class Terrain {
 
         }
 
-        terrainNormals = null;
-        terrainHeights = new float[terrainGridWidth * terrainGridLength];
-        terrainColors = new int[terrainGridWidth * terrainGridLength];
+        terrainNormals = new float[terrainGridWidth * terrainGridLength * 3];
+        terrainHeights = new float[terrainGridWidth * terrainGridLength * 2];
+        terrainColors = new int[terrainGridWidth * terrainGridLength * 2];
 // fill arrays
         for (int i = 0; i < terrainGridLength; i++)
             for (int j = 0; j < terrainGridWidth; j++) {
@@ -227,22 +230,23 @@ class Terrain {
             height = (terrainHeights[i] - min1) / (max1 - min1);
             terrainHeights[i] = height * amp - min;
         }
+        waterLevel = (waterLevel - min1) / (max1 - min1);
+        waterLevel = waterLevel * amp - min;
+        waterLevel = waterLevel -40f;
+
         if (terrainNormals != null)
             terrainComputeNormals();
         return 1;
     }
 
 
-    public int terrainCreateDL(GL2 gl, GLU glu, GLUT glut, float xOffset, float yOffset, float zOffset, Lighting lighting) {
+    public void terrainCreateDL(GL2 gl, GLU glu, GLUT glut, float xOffset, float yOffset, float zOffset, Lighting lighting) {
 
-        int terrainDL;
         float startW, startL;
         int i, j;
 
         startW = (float) (terrainGridWidth / 2.0 - terrainGridWidth);
         startL = (float) (-terrainGridLength / 2.0 + terrainGridLength);
-
-        terrainDL = gl.glGenLists(1);
 
         //glNewList(terrainDL, GL_COMPILE);
         /*if (terrainNormals != null && terrainColors != null) {
@@ -255,24 +259,23 @@ class Terrain {
             for (j = 0; j < terrainGridWidth; j++) {
 
                 color = new Color(terrainColors[(i + 1) * terrainGridWidth + (j)]);
-                gl.glColor3f(color.getRed()/255.0f, color.getGreen()/255.0f, color.getBlue()/255.0f);
-                if (terrainNormals != null) {
-                    gl.glNormal3f(terrainNormals[3 * ((i + 1) * terrainGridWidth + j)],
-                            terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 1],
-                            terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 2]);
-                }
+                gl.glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
+                //lighting.setColor(gl, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1f);
+                gl.glNormal3f(terrainNormals[3 * ((i + 1) * terrainGridWidth + j)],
+                        terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 1],
+                        terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 2]);
+
                 gl.glVertex3f(
                         startW + j + xOffset,
                         startL - (i + 1) + zOffset,
                         terrainHeights[(i + 1) * terrainGridWidth + (j)] + yOffset);
 
                 color = new Color(terrainColors[(i + 1) * terrainGridWidth + (j)]);
-                gl.glColor3f(color.getRed()/255.0f, color.getGreen()/255.0f, color.getBlue()/255.0f);
-                if (terrainNormals != null) {
-                    gl.glNormal3f(terrainNormals[3 * (i * terrainGridWidth + j)],
-                            terrainNormals[3 * (i * terrainGridWidth + j) + 1],
-                            terrainNormals[3 * (i * terrainGridWidth + j) + 2]);
-                }
+                gl.glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
+                //lighting.setColor(gl, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1f);
+                gl.glNormal3f(terrainNormals[3 * (i * terrainGridWidth + j)],
+                        terrainNormals[3 * (i * terrainGridWidth + j) + 1],
+                        terrainNormals[3 * (i * terrainGridWidth + j) + 2]);
                 gl.glVertex3f(
                         startW + j + xOffset,
                         startL - i + zOffset,
@@ -280,6 +283,16 @@ class Terrain {
             }
             gl.glEnd();
         }
-        return (terrainDL);
+        gl.glColor4f(0.827f, 0.827f, 0.827f, 0.1f);
+        gl.glBegin(gl.GL_QUADS);
+
+        gl.glVertex3f(-terrainGridWidth / 2, -terrainGridLength / 2,  -31.013216f);
+        gl.glVertex3f(-terrainGridWidth / 2, terrainGridLength / 2,  -31.013216f);
+        gl.glVertex3f(terrainGridWidth / 2, terrainGridLength / 2,  -31.013216f);
+        gl.glVertex3f(terrainGridWidth / 2, -terrainGridLength / 2,  -31.013216f);
+
+
+        gl.glEnd();
+
     }
 }

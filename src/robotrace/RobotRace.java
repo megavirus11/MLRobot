@@ -101,7 +101,7 @@ public class RobotRace extends Base {
         );
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE
+        robots[3] = new Robot(Material.PLASTIC_ORANGE
 
         );
 
@@ -195,26 +195,7 @@ public class RobotRace extends Base {
      */
     @Override
     public void setView() {
-        // Select part of window.
-        gl.glViewport(0, 0, gs.w, gs.h);
-
-        // Set projection matrix.
-        gl.glMatrixMode(GL_PROJECTION);
-        gl.glLoadIdentity();
-
-        // Set the perspective.
-        glu.gluPerspective(45, (float)gs.w / (float)gs.h, 0.1*gs.vDist, 10*gs.vDist);
-
-        // Set camera.
-        gl.glMatrixMode(GL_MODELVIEW);
-        gl.glLoadIdentity();
-
-        // Update the view according to the camera mode and robot of interest.
-        // For camera modes 1 to 4, determine which robot to focus on.
-        camera.update(gs, getRobotAtBackOfRace());
-        glu.gluLookAt(camera.eye.x(),    camera.eye.y(),    camera.eye.z(),
-                      camera.center.x(), camera.center.y(), camera.center.z(),
-                      camera.up.x(),     camera.up.y(),     camera.up.z());
+        camera.update(gl, glu, gs, getRobotAtBackOfRace());
         lighting.setView(gl);
     }
 
@@ -223,8 +204,7 @@ public class RobotRace extends Base {
      */
     @Override
     public void drawScene() {
-
-        //gl.glUseProgram(defaultShader.getProgramID());
+        gl.glUseProgram(defaultShader.getProgramID());
         reportError("program");
 
         // Background color.
@@ -259,7 +239,7 @@ public class RobotRace extends Base {
         
         // Draw the race track.
         gl.glUseProgram(trackShader.getProgramID());
-        raceTracks[gs.trackNr].draw(gl, glu, glut);
+        raceTracks[gs.trackNr].draw(gl, glu, glut, lighting);
 
         // Draw the terrain.
         gl.glUseProgram(terrainShader.getProgramID());
@@ -354,48 +334,6 @@ public class RobotRace extends Base {
         glut.glutSolidCube(0.05f);
         gl.glPopMatrix();
 
-    }
-
-    /**
-     * Drawing hierarchy example.
-     *
-     * This method draws an "arm" which can be animated using the sliders in the
-     * RobotRace interface. The A and B sliders rotate the different joints of
-     * the arm, while the C, D and E sliders set the R, G and B components of
-     * the color of the arm respectively.
-     *
-     * The way that the "arm" is drawn (by calling {@link #drawSecond()}, which
-     * in turn calls {@link #drawThird()} imposes the following hierarchy:
-     *
-     * {@link #drawHierarchy()} -> {@link #drawSecond()} -> {@link #drawThird()}
-     */
-    private void drawHierarchy() {
-        gl.glColor3d(gs.sliderC, gs.sliderD, gs.sliderE);
-        gl.glPushMatrix();
-            gl.glTranslated(1, 0, 0);
-            gl.glScaled(2, 1, 1);
-            glut.glutSolidCube(1);
-            gl.glScaled(0.5, 1, 1);
-            gl.glTranslated(1, 0, 0);
-            gl.glRotated(gs.sliderA * -90.0, 0, 1, 0);
-            drawSecond();
-        gl.glPopMatrix();
-    }
-
-    private void drawSecond() {
-        gl.glTranslated(1, 0, 0);
-        gl.glScaled(2, 1, 1);
-        glut.glutSolidCube(1);
-        gl.glScaled(0.5, 1, 1);
-        gl.glTranslated(1, 0, 0);
-        gl.glRotated(gs.sliderB * -90.0, 0, 1, 0);
-        drawThird();
-    }
-
-    private void drawThird() {
-        gl.glTranslated(1, 0, 0);
-        gl.glScaled(2, 1, 1);
-        glut.glutSolidCube(1);
     }
 
 

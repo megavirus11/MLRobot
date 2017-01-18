@@ -61,6 +61,13 @@ public class Lighting {
     public void setColor(GL2 gl, float red, float green, float blue, float alpha) {
         gl.glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, new float[]{red, green, blue, alpha}, 0);
         gl.glMaterialfv(GL_FRONT, GL_SPECULAR, new float[]{0f, 0f, 0f, 0f}, 0);
-        gl.glMaterialf(GL_FRONT, GL_SHININESS, 0);
+        gl.glMaterialf(GL_FRONT, GL_SHININESS, 20);
+    }
+
+    public void setMaterial(GL2 gl, Material material) {
+        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient, 0);
+        gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse, 0);
+        gl.glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular, 0);
+        gl.glMaterialf(GL_FRONT, GL_SHININESS, material.shininess);
     }
 }

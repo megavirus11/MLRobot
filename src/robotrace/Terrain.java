@@ -287,13 +287,11 @@ class Terrain {
         }
         gl.glColor4f(0.827f, 0.827f, 0.827f, 0.3f);
         gl.glBegin(gl.GL_QUADS);
-
-        float kappa = waterLevel;
+        
         gl.glVertex3f(-terrainGridWidth / 2, -terrainGridLength / 2,  waterLevel);
         gl.glVertex3f(-terrainGridWidth / 2, terrainGridLength / 2,  waterLevel);
         gl.glVertex3f(terrainGridWidth / 2, terrainGridLength / 2,  waterLevel);
         gl.glVertex3f(terrainGridWidth / 2, -terrainGridLength / 2,  waterLevel);
-
 
         gl.glEnd();
 

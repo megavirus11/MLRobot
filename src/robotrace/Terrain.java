@@ -31,8 +31,8 @@ class Terrain {
      * Draws the terrain.
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, Lighting lighting) {
-        lighting.setMaterial(gl, Material.DIRT);
-        lighting.setColor(gl, 1f, 1f, 1f, 1f);
+        //lighting.setMaterial(gl, Material.DIRT);
+        //lighting.setColor(gl, 1f, 1f, 1f, 1f);
         terrainLoadFromImage("textures/3dtech0.jpg", 1);
         terrainScale(0, 40);
         terrainCreateDL(gl, glu, glut, 0, -40f, 0, lighting);
@@ -248,11 +248,8 @@ class Terrain {
         startW = (float) (terrainGridWidth / 2.0 - terrainGridWidth);
         startL = (float) (-terrainGridLength / 2.0 + terrainGridLength);
 
-        //glNewList(terrainDL, GL_COMPILE);
-        /*if (terrainNormals != null && terrainColors != null) {
-            glColorMaterial(GL_FRONT, GL_DIFFUSE);
-            glEnable(GL_COLOR_MATERIAL);
-        }*/
+            /*gl.glColorMaterial(gl.GL_FRONT, gl.GL_DIFFUSE);
+            gl.glEnable(gl.GL_COLOR_MATERIAL);*/
         Color color;
         for (i = 0; i < terrainGridLength - 1; i++) {
             gl.glBegin(GL.GL_TRIANGLE_STRIP);
@@ -262,8 +259,9 @@ class Terrain {
                 gl.glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
                 //lighting.setColor(gl, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1f);
                 gl.glNormal3f(terrainNormals[3 * ((i + 1) * terrainGridWidth + j)],
-                        terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 1],
-                        terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 2]);
+                        terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 2],
+                        terrainNormals[3 * ((i + 1) * terrainGridWidth + j) + 1]
+                        );
 
                 gl.glVertex3f(
                         startW + j + xOffset,
@@ -274,8 +272,9 @@ class Terrain {
                 gl.glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
                 //lighting.setColor(gl, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1f);
                 gl.glNormal3f(terrainNormals[3 * (i * terrainGridWidth + j)],
-                        terrainNormals[3 * (i * terrainGridWidth + j) + 1],
-                        terrainNormals[3 * (i * terrainGridWidth + j) + 2]);
+                        terrainNormals[3 * (i * terrainGridWidth + j) + 2],
+                        terrainNormals[3 * (i * terrainGridWidth + j) + 1]
+                        );
                 gl.glVertex3f(
                         startW + j + xOffset,
                         startL - i + zOffset,

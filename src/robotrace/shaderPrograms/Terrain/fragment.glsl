@@ -36,8 +36,6 @@ void main()
 		specSum += spec;
 	}
 	//ambientSum /= 1; //Change this to a dynamic light enabled value
-	//vec4 texColor = texture(Tex, data.TexCoord);
-
-	gl_FragColor = gl_Color * (vec4( ambientSum + diffuseSum, 1 ) + vec4( specSum, 1 ))*2;
+	gl_FragColor = gl_Color * (vec4( ambientSum + diffuseSum, 1 ) + vec4( specSum, 1 ));
 
 }

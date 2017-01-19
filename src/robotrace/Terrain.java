@@ -33,9 +33,9 @@ class Terrain {
     public void draw(GL2 gl, GLU glu, GLUT glut, Lighting lighting) {
         //lighting.setMaterial(gl, Material.DIRT);
         //lighting.setColor(gl, 1f, 1f, 1f, 1f);
-        terrainLoadFromImage("textures/3dtech0.jpg", 1);
+        terrainLoadFromImage("textures/3dtech2.jpg", 1);
         terrainScale(0, 40);
-        terrainCreateDL(gl, glu, glut, 0, -40f, 0, lighting);
+        terrainCreateDL(gl, glu, glut, 0, -31.8f, 0, lighting);
     }
 
     public static int terrainGridWidth, terrainGridLength;
@@ -230,9 +230,11 @@ class Terrain {
             height = (terrainHeights[i] - min1) / (max1 - min1);
             terrainHeights[i] = height * amp - min;
         }
-        waterLevel = (waterLevel - min1) / (max1 - min1);
+        /*waterLevel = (waterLevel - min1) / (max1 - min1);
         waterLevel = waterLevel * amp - min;
-        waterLevel = waterLevel -40f;
+        waterLevel = waterLevel -31.8f;
+        */
+        waterLevel = waterLevel * max - 31.8f;
 
         if (terrainNormals != null)
             terrainComputeNormals();
@@ -282,13 +284,14 @@ class Terrain {
             }
             gl.glEnd();
         }
-        gl.glColor4f(0.827f, 0.827f, 0.827f, 0.1f);
+        gl.glColor4f(0.827f, 0.827f, 0.827f, 0.3f);
         gl.glBegin(gl.GL_QUADS);
 
-        gl.glVertex3f(-terrainGridWidth / 2, -terrainGridLength / 2,  -31.013216f);
-        gl.glVertex3f(-terrainGridWidth / 2, terrainGridLength / 2,  -31.013216f);
-        gl.glVertex3f(terrainGridWidth / 2, terrainGridLength / 2,  -31.013216f);
-        gl.glVertex3f(terrainGridWidth / 2, -terrainGridLength / 2,  -31.013216f);
+        float kappa = waterLevel;
+        gl.glVertex3f(-terrainGridWidth / 2, -terrainGridLength / 2,  -23.8f);
+        gl.glVertex3f(-terrainGridWidth / 2, terrainGridLength / 2,  -23.8f);
+        gl.glVertex3f(terrainGridWidth / 2, terrainGridLength / 2,  -23.8f);
+        gl.glVertex3f(terrainGridWidth / 2, -terrainGridLength / 2,  -23.8f);
 
 
         gl.glEnd();

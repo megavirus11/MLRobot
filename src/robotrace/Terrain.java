@@ -34,7 +34,7 @@ class Terrain {
         //lighting.setMaterial(gl, Material.DIRT);
         //lighting.setColor(gl, 1f, 1f, 1f, 1f);
         terrainLoadFromImage("textures/3dtech2.jpg", 1);
-        terrainScale(0, 40);
+        terrainScale(0, 40, -31.8f);
         terrainCreateDL(gl, glu, glut, 0, -31.8f, 0, lighting);
     }
 
@@ -42,7 +42,7 @@ class Terrain {
     public static float[] terrainHeights;
     public static int[] terrainColors;
     public static float[] terrainNormals;
-    public static float waterLevel = 0.2f;
+    public static float waterLevel;
 
 
     public float[] terrainCrossProduct(int x1, int z1, int x2, int z2, int x3, int z3) {
@@ -204,10 +204,11 @@ class Terrain {
         return 1;
     }
 
-    int terrainScale(float min, float max) {
+    int terrainScale(float min, float max, float zOffset) {
 
         float amp, aux, min1, max1, height;
         int total, i;
+        waterLevel = 0.2f;
 
         if (min > max) {
             aux = min;
@@ -234,7 +235,7 @@ class Terrain {
         waterLevel = waterLevel * amp - min;
         waterLevel = waterLevel -31.8f;
         */
-        waterLevel = waterLevel * max - 31.8f;
+        waterLevel = waterLevel * max + zOffset;
 
         if (terrainNormals != null)
             terrainComputeNormals();
@@ -288,10 +289,10 @@ class Terrain {
         gl.glBegin(gl.GL_QUADS);
 
         float kappa = waterLevel;
-        gl.glVertex3f(-terrainGridWidth / 2, -terrainGridLength / 2,  -23.8f);
-        gl.glVertex3f(-terrainGridWidth / 2, terrainGridLength / 2,  -23.8f);
-        gl.glVertex3f(terrainGridWidth / 2, terrainGridLength / 2,  -23.8f);
-        gl.glVertex3f(terrainGridWidth / 2, -terrainGridLength / 2,  -23.8f);
+        gl.glVertex3f(-terrainGridWidth / 2, -terrainGridLength / 2,  waterLevel);
+        gl.glVertex3f(-terrainGridWidth / 2, terrainGridLength / 2,  waterLevel);
+        gl.glVertex3f(terrainGridWidth / 2, terrainGridLength / 2,  waterLevel);
+        gl.glVertex3f(terrainGridWidth / 2, -terrainGridLength / 2,  waterLevel);
 
 
         gl.glEnd();
